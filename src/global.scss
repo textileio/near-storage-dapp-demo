@@ -107,6 +107,8 @@ input[type="number"] {
 
 .currentRule {
   font-size: calc(.75em + 1vw);
+}
+.currentRule.active {
   cursor: pointer;
 }
 .currentRule.blink {
@@ -180,9 +182,9 @@ a.helpText {
   position: relative;
   float:left;
   margin:5px;
-  cursor: pointer;
   width: 120px;
-  height: 60px;
+  height: 120px;
+  cursor: pointer;
 }
 .token-image img{
   border: 0.5px solid #eee;
@@ -194,18 +196,36 @@ a.helpText {
 }
 .token-image:hover h2 {
  position: absolute;
-  top: 40%;
+  top: 20%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: block;
 }
 .token-image h2 {
-    position:absolute;
-    display:none;
-    text-align: center;
-    vertical-align: center;
-    line-height: 100%;
-    font-size: 12px;
-    top:0;
-    left:0;
+  position:absolute;
+  display:none;
+  text-align: center;
+  vertical-align: center;
+  line-height: 100%;
+  font-size: 12px;
+  top:0;
+  left:0;
+}
+.token-image .asset-link {
+  align-self: center;
+  position: relative;
+  width: 120px;
+  padding: 0; 
+  margin: 0 0 10px;
+  text-align: center;
+  color: #333;
+  font-size: var(--small-font);
+  line-height: 24px;
+}
+.token-image .asset-link a {
+  text-decoration: none;
+  color: #333;
+}
+.token-image .asset-link a:hover {
+  text-decoration: underline;
 }

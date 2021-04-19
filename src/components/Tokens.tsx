@@ -16,6 +16,10 @@ export default function Tokens({ tokens, onClick }: Props) {
         <div className="token-image" onClick={()=>onClick(parseInt(token.rule))}>
             <img src={`https://dweb.link/ipfs/${token.cid}`} />
             <h2>{token.rule}</h2>
+            <p className="asset-link" >
+              View 
+              (<a href={`https://dweb.link/ipfs/${token.cid}`} target="_blank">gateway</a>)
+            </p>
         </div>
       </Col>
       )}
