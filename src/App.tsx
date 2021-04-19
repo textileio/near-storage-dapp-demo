@@ -134,8 +134,10 @@ const App = ({ contract, currentUser, nearConfig, wallet, lockBox, store }: Prop
         <Col>
           {!currentUser 
             ? <div className={`currentRule`}>{`Rule ${ruleN} — Log in to mint.`}</div>
+            : !locked 
+            ? <div className={`currentRule active`} onClick={mint}>{`Rule ${ruleN} — Click to lock funds to store.`}</div>
             : owned
-            ? <div className={`currentRule`}>{`Rule ${ruleN} — From your collection.`}</div>
+            ? <div className={`currentRule active ${artwork ? "" : " blink"}`} onClick={mint}>{`Rule ${ruleN} — ${artwork ? "Mint new" : "Waiting to render.."}.`}</div>
             : <div className={`currentRule active ${artwork ? "" : " blink"}`} onClick={mint}>{`Rule ${ruleN} — ${artwork ? "Click here to mint" : "Waiting to render.."}.`}</div>
           }
         </Col>
