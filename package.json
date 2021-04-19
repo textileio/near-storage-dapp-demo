@@ -1,5 +1,5 @@
 {
-  "name": "lock-box",
+  "name": "near-storage-dapp-demo",
   "version": "0.1.0",
   "license": "(MIT AND Apache-2.0)",
   "scripts": {
@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@stablelib/base64": "^1.0.0",
-    "@textile/near-storage": "^0.2.0",
+    "@textile/near-storage": "0.2.1",
     "@types/big.js": "^6.0.2",
     "@types/bs58": "^4.0.1",
     "@types/prop-types": "^15.7.3",
@@ -50,6 +50,7 @@
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-grid-system": "7.1.2",
     "regenerator-runtime": "^0.13.7"
   },
   "resolutions": {

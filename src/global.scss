@@ -1,3 +1,12 @@
+@font-face {
+    font-family: 'Cutive';
+    src: url('./fonts/Cutive-Regular.woff2') format('woff2'),
+        url('./fonts/Cutive-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -11,10 +20,12 @@ html {
   --primary: #D1CCBD;
   --secondary: var(--royal);
   --tertiary: #FF585D;
+  --small-font: calc(.25em + 0.7vw);
+  --very-small-font: calc(.25em + 0.35vw);
 
   background-color: var(--bg);
   color: var(--fg);
-  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  font-family: Cutive,serif;
   font-size: calc(.65em + 0.7vw);
   line-height: 1.3;
 
@@ -23,16 +34,6 @@ html {
     color: var(--bg);
   }
 
-  @media (prefers-color-scheme: dark) {
-    --bg: #25282A;
-    --fg: #fff;
-    --secondary: var(--blue);
-
-    ::selection {
-      background: var(--secondary);
-      color: var(--fg);
-    }
-  }
 }
 
 body {
@@ -45,6 +46,7 @@ fieldset {
   border: none;
   margin: 0;
   padding: 0;
+  padding-bottom: 30px;
 }
 
 .highlight {
@@ -62,17 +64,6 @@ fieldset {
 
 label {
   color: var(--gray);
-}
-
-button, .highlight {
-  border-radius: 5px;
-  border-color: var(--primary);
-  border: 0.1em solid var(--primary);
-  padding: 0.5em 1em;
-
-  &:hover, &:focus, &:focus-within {
-    border-color: var(--secondary);
-  }
 }
 
 input {
@@ -94,29 +85,124 @@ input[type="number"] {
   }
 }
 
-button, input {
-  background: transparent;
-  color: inherit;
+.auth {
   cursor: pointer;
-  font: inherit;
-  outline: none;
-}
-
-button {
-  position: relative;
-  transition: top 50ms;
-  &:hover, &:focus {
-    top: -1px;
-  }
-  &:active {
-    background: var(--secondary);
-    border-color: var(--secondary);
-    top: 1px;
-  }
+  font-size: var(--small-font);
+  text-decoration: underline;
+  margin: 20px 0 0;
 }
 
 .is-premium {
   border-left: 0.25em solid var(--secondary);
   padding-left: 0.25em;
   margin-left: -0.5em;
+}
+
+.option {
+  color: black;
+  font-size: 22px;
+}
+
+/* NEW ELEMENTS */
+
+.currentRule {
+  font-size: calc(.75em + 1vw);
+  cursor: pointer;
+}
+.currentRule.blink {
+  color: #444;
+}
+
+.helpText {
+  font-size: var(--small-font);
+}
+a.helpText {
+  font-size: var(--very-small-font);
+  text-decoration: none;
+  text-decoration: underline;
+  color: #333;
+}
+
+.ruleToggle {
+  cursor: pointer;
+}
+
+.rules {
+  justify-content: center;
+  flex-direction: column;
+  text-align:center;
+}
+
+.rules .visual {
+  display:inline-block;
+  margin: 0 auto;
+  width: 51px;
+  height: 30px;
+  margin-bottom: 10px;
+}
+
+.rules .visual .pixel {
+  width: 15px;
+  height: 15px;
+  float: left;
+  border: 1px solid transparent;
+  margin: 0.5px;
+}
+
+.rules .visual .pixel.on {
+  border: 1px solid black;
+  background: black;
+}
+
+.rules .visual .pixel.off {
+  border: 1px solid black;
+  background: white;
+}
+
+.rules .visual .onOff {
+  width: auto;
+  text-align: center;
+}
+
+.ownedToken {
+  cursor: pointer;
+}
+
+.ownedToken .token {
+  width: 120px;
+}
+
+.ruleCanvas {
+  border: 0.5px solid #eee;
+}
+
+.token-image {
+    position: relative;
+    float:left;
+    margin:5px;
+  cursor: pointer;
+  width: 120px;
+}
+.token-image img{
+  width: 120px;
+}
+.token-image:hover img{
+    opacity:0.5;
+}
+.token-image:hover h2 {
+ position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+}
+.token-image h2 {
+    position:absolute;
+    display:none;
+    text-align: center;
+    vertical-align: center;
+    line-height: 100%;
+    font-size: 12px;
+    top:0;
+    left:0;
 }

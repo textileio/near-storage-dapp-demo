@@ -1,39 +1,19 @@
-import { context, u128, PersistentMap } from "near-sdk-as";
-
-/**
- * Minimum funds (in Near) required to lock.
- */
-export const LOCK_AMOUNT = u128.from('1000000000000000000000000')
-
-@nearBindgen
-export class LockResponse {
-  constructor(public blockIndex: u128) {}
-}
+import { context, u128, PersistentVector } from "near-sdk-as";
 
 /** 
- * The `LockInfo` class represents info about locked funds.
+ * Exporting a new class TokenAsset so it can be used outside of this file.
  */
 @nearBindgen
-export class LockInfo {
-  /**
-   * The amount of locked funds (in Near).
-   */
-  deposit: u128;
-  /**
-   * The provider account.
-   */
-  sender: string
-  /**
-   * Create a new `LockInfo` object.
-   * @param accountId The target account id.
-   */
-  constructor(public accountId: string) {
-    this.deposit = context.attachedDeposit
-    this.sender = context.sender
+export class TokenAsset {
+  sender: string;
+  constructor(public cid: string, public rule: string) {
+    this.sender = context.sender;
   }
 }
-
 /**
- * The lock `box` is the persistent map of accountId => locked fund info.
+ * collections.vector is a persistent collection. Any changes to it will
+ * be automatically saved in the storage.
+ * The parameter to the constructor needs to be unique across a single contract.
+ * It will be used as a prefix to all keys required to store data in the storage.
  */
-export const box = new PersistentMap<string, LockInfo>("m");
+export const assets = new PersistentVector<TokenAsset>("m");
