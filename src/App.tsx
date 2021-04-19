@@ -136,7 +136,7 @@ const App = ({ contract, currentUser, nearConfig, wallet, lockBox, store }: Prop
           : <div className="auth" onClick={signIn}>log in</div>
         }
         { locked
-          && <div className="auth" onClick={unlock}>unlock funds</div>
+          && <div className="auth" onClick={unlock}>end storage session</div>
         }
         <br/>
         <h2>RULE TOKENS</h2>
