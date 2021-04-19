@@ -167,7 +167,7 @@ const App = ({ contract, currentUser, nearConfig, wallet, lockBox, store }: Prop
       <Row>
         <Col>
           {tokens.length > 0 
-            ? <div className="helpText">Your rule token collction.</div>
+            ? <div className="helpText">Recently minted.</div>
             : <div className="helpText">Mint a token to grow your collection.</div>
           }
         </Col>
