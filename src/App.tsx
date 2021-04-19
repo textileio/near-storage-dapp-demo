@@ -5,7 +5,7 @@ import {Artwork} from './components/Artwork';
 import Rule from './components/Rule';
 import Tokens from './components/Tokens';
 import { ScreenClassProvider, Container, Row, Col, setConfiguration } from 'react-grid-system';
-// import type { StoreFunction, LockBox } from "@textile/near-storage"
+import type { StoreFunction, LockBox } from "@textile/near-storage"
 
 setConfiguration({ defaultScreenClass: 'sm', gridColumns: 16 });
 
@@ -45,7 +45,7 @@ const App = ({ contract, currentUser, nearConfig, wallet, lockBox, store }: Prop
 
   useEffect(() => {
     // TODO: don't just fetch once; subscribe!
-    contract.getStoredAssets().then((t) => {setTokens(t)});
+    contract.getStoredAssets().then((t: any) => {setTokens(t)});
     lockBox.hasLocked().then(setLocked);
   }, []);
 
@@ -80,12 +80,6 @@ const App = ({ contract, currentUser, nearConfig, wallet, lockBox, store }: Prop
         setTokens(tokens);
       });
     });
-    // lockBox.unlockFunds()
-    //       .then(() => {
-    //         setLocked(false)
-    //         alert("funds unlocked!")
-    //       })
-    //       .catch((err: Error) => alert(err.message));
     // const store = async () => {
       // await storage.signIn()
       // await storage.lockFunds()
@@ -104,15 +98,24 @@ const App = ({ contract, currentUser, nearConfig, wallet, lockBox, store }: Prop
     setArtwork(b)
   }
   
+  const unlock = async () => {
+    await lockBox.unlockFunds()
+    setLocked(false)
+    alert("funds unlocked!")
+  };
+  
   const signIn = () => {
-    wallet.requestSignIn(
-      nearConfig.contractName,
-      'RULE TOKENS'
-    );
+    // wallet.requestSignIn(
+    //   nearConfig.contractName,
+    //   'RULE TOKENS'
+    // );
+    lockBox.requestSignIn('RULE TOKENS');
   };
 
-  const signOut = () => {
-    wallet.signOut();
+  const signOut = async () => {
+    // wallet.signOut();
+    await unlock()
+    await lockBox.signOut();
     window.location.replace(window.location.origin + window.location.pathname);
   };
 
@@ -132,12 +135,17 @@ const App = ({ contract, currentUser, nearConfig, wallet, lockBox, store }: Prop
           ? <div className="auth" onClick={signOut}>log out</div>
           : <div className="auth" onClick={signIn}>log in</div>
         }
+        { locked
+          && <div className="auth" onClick={unlock}>unlock funds</div>
+        }
         <br/>
         <h2>RULE TOKENS</h2>
       </header>
       <Row>
         <Col>
-          {owned
+          {!currentUser 
+            ? <div className={`currentRule`}>{`Rule ${ruleN} — Log in to mint.`}</div>
+            : owned
             ? <div className={`currentRule`}>{`Rule ${ruleN} — From your collection.`}</div>
             : <div className={`currentRule ${artwork ? "" : " blink"}`} onClick={mint}>{`Rule ${ruleN} — ${artwork ? "Click here to mint" : "Waiting to render.."}.`}</div>
           }

@@ -49,7 +49,8 @@ it('renders with proper title', () => {
 
   act(() => {
     testRenderer = TestRenderer.create(
-      <App contract={contract} wallet={walletConnection} nearConfig={nearConfig} />
+      // @ts-ignore
+      <App contract={contract} wallet={walletConnection} nearConfig={nearConfig}/>
     );
   });
 
