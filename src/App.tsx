@@ -80,17 +80,6 @@ const App = ({ contract, currentUser, nearConfig, wallet, lockBox, store }: Prop
         setTokens(tokens);
       });
     });
-    // const store = async () => {
-      // await storage.signIn()
-      // await storage.lockFunds()
-      // const data = await fetch(artwork)
-      // const blob = await data.blob()
-      // const file = new File([blob], "sun.webm", {
-      //   type: "video/webm",
-      //   lastModified: new Date().getTime(),
-      // });
-      // return await storage.store(file)
-    // }
     return
   }
 
@@ -188,9 +177,19 @@ const App = ({ contract, currentUser, nearConfig, wallet, lockBox, store }: Prop
       <br/>
       <Row>
         <Col>
+          <h2>About</h2>
+          <div>
+            Sign in with NEAR and mint your cellular atomata! This contract will store a map to all your assets stored on Filecoin/IPFS. Lock funds to upload new assets through the Filecoin Oracle, end your session to unlock your funds. This contract and app were built with an AssemblyScript backend and a React frontend.
+          </div>
+        </Col>
+      </Row>
+      <br/>
+      <Row>
+        <Col>
           <a href="https://mathworld.wolfram.com/ElementaryCellularAutomaton.html" className="helpText">Read more about elementary cellular automaton.</a>
         </Col>
       </Row>
+      <br/>
       </Container>
     </ScreenClassProvider>
   );
