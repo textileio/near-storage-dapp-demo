@@ -177,21 +177,24 @@ a.helpText {
 }
 
 .token-image {
-    position: relative;
-    float:left;
-    margin:5px;
+  position: relative;
+  float:left;
+  margin:5px;
   cursor: pointer;
   width: 120px;
+  height: 60px;
 }
 .token-image img{
+  border: 0.5px solid #eee;
   width: 120px;
+  height: 60px;
 }
 .token-image:hover img{
     opacity:0.5;
 }
 .token-image:hover h2 {
  position: absolute;
-  top: 35%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: block;

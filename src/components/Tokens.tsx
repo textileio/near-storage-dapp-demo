@@ -10,7 +10,7 @@ interface Props {
 
 export default function Tokens({ tokens, onClick }: Props) {
   return (
-    <Row>
+    <Row justify="around">
       {tokens.map((token, i) => 
       <Col key={i}>
         <div className="token-image" onClick={()=>onClick(parseInt(token.rule))}>

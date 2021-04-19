@@ -34,32 +34,19 @@ const App = ({ contract, currentUser, nearConfig, wallet, lockBox, store }: Prop
   const [tokens, setTokens] = useState<Array<{cid: string, rule: string}>>([]);
   const [artwork, setArtwork] = useState<string>();
   const [positionals, setPositionals] = useState(automata);
+  const [locked, setLocked] = useState<boolean>(false);
 
   const [width, setWidth] = useState(0);
   const div = useCallback(node => {
     if (node !== null) {
       setWidth(node.getBoundingClientRect().width);
-
-      // TODO remove:
-      setTokens([{
-        cid: "bafybeiboeucy7qxuqblxbxwhft35fy2jf2fwgdppo3qyea6oqzmfm6pp5i/118.png",
-        rule: "118",
-      },{
-        cid: "bafybeiboeucy7qxuqblxbxwhft35fy2jf2fwgdppo3qyea6oqzmfm6pp5i/126.png",
-        rule: "126",
-      },{
-        cid: "bafybeiboeucy7qxuqblxbxwhft35fy2jf2fwgdppo3qyea6oqzmfm6pp5i/149.png",
-        rule: "149",
-      },{
-        cid: "bafybeiboeucy7qxuqblxbxwhft35fy2jf2fwgdppo3qyea6oqzmfm6pp5i/169.png",
-        rule: "169",
-      },])
     }
   }, []);
 
   useEffect(() => {
     // TODO: don't just fetch once; subscribe!
-    contract.getStoredAssets().then(setTokens);
+    contract.getStoredAssets().then((t) => {setTokens(t)});
+    lockBox.hasLocked().then(setLocked);
   }, []);
 
 
@@ -68,13 +55,38 @@ const App = ({ contract, currentUser, nearConfig, wallet, lockBox, store }: Prop
     setArtwork(undefined)
   }
 
-  const mint = () => {
+  const mint = async () => {
     if (artwork == undefined) {
       alert("error: no token selected"); 
       return;
     }
-    console.log('minting')
-    const store = async () => {
+    await lockBox.lockFunds()
+
+    const data = await fetch(artwork)
+    const blob = await data.blob()
+
+    const file = new File([blob], "rule.png", {
+      type: "image/png",
+      lastModified: new Date().getTime(),
+    });
+    const stored = await store(file)
+    const rule = "" + parseInt([...positionals].reverse().join(""), 2)
+    contract.storeNewAsset(
+      { cid: stored.cid["/"], rule},
+      BOATLOAD_OF_GAS,
+      Big('0').toFixed()
+    ).then(() => {
+      contract.getStoredAssets().then((tokens: any) => {
+        setTokens(tokens);
+      });
+    });
+    // lockBox.unlockFunds()
+    //       .then(() => {
+    //         setLocked(false)
+    //         alert("funds unlocked!")
+    //       })
+    //       .catch((err: Error) => alert(err.message));
+    // const store = async () => {
       // await storage.signIn()
       // await storage.lockFunds()
       // const data = await fetch(artwork)
@@ -84,8 +96,8 @@ const App = ({ contract, currentUser, nearConfig, wallet, lockBox, store }: Prop
       //   lastModified: new Date().getTime(),
       // });
       // return await storage.store(file)
-    }
-    return store()
+    // }
+    return
   }
 
   const onComplete = (b: string) => {

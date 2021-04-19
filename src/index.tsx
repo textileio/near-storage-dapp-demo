@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 // @ts-expect-error missing types
 import getConfig from './config.js';
 import { connect, keyStores, Contract, WalletConnection } from 'near-api-js';
-// import { openLockBox, openStore } from "@textile/near-storage"
+import { openLockBox, openStore } from "@textile/near-storage"
 
 // Seems like a strange hack
 const ENV = process.env as unknown as Record<string, string>
@@ -54,8 +54,8 @@ async function initConnection() {
   });
 
 
-  const lockBox = undefined //openLockBox(walletConnection);
-  const store = undefined //openStore(walletConnection);
+  const lockBox = openLockBox(walletConnection);
+  const store = openStore(walletConnection);
   return { contract, currentUser, nearConfig, walletConnection, lockBox, store }
 }
 

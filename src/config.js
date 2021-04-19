@@ -1,12 +1,5 @@
-// Seems like a strange hack
-const ENV = process.env
-const CONTRACT_NAME = ENV.CONTRACT_NAME || 'token-assets.testnet';
+const CONTRACT_NAME = process.env.CONTRACT_NAME || 'nft-asset-storage.testnet';
 
-/**
- * 
- * @param {"mainnet" | "production" | "development" | "testnet" | "betanet" | "local" | "test" | "ci" | "ci-betanet"} env 
- * @returns 
- */
 function getConfig(env) {
   switch(env) {
     case 'mainnet':
@@ -41,7 +34,7 @@ function getConfig(env) {
       return {
         networkId: 'local',
         nodeUrl: 'http://localhost:3030',
-        keyPath: `${ENV.HOME}/.near/validator_key.json`,
+        keyPath: `${process.env.HOME}/.near/validator_key.json`,
         walletUrl: 'http://localhost:4000/wallet',
         contractName: CONTRACT_NAME
       };
@@ -61,8 +54,8 @@ function getConfig(env) {
         masterAccount: 'test.near'
       };
     default:
-      throw Error(`Misconfigured environment '${env}'. Can be configured in src/config.js.`);
+      throw Error(`Unconfigured environment '${env}'. Can be configured in src/config.js.`);
   }
 }
 
-module.exports = getConfig
+module.exports = getConfig;
