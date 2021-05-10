@@ -12,9 +12,9 @@ import { openLockBox, openStore } from "@textile/near-storage"
 const ENV = process.env as unknown as Record<string, string>
 
 declare global {
-    interface Window { 
-      nearInitPromise: Promise<void>
-     }
+  interface Window {
+    nearInitPromise: Promise<void>
+  }
 }
 
 // Initializing contract
@@ -34,7 +34,7 @@ async function initConnection() {
 
   // Load in account data
   let currentUser;
-  if(walletConnection.getAccountId()) {
+  if (walletConnection.getAccountId()) {
     currentUser = {
       accountId: walletConnection.getAccountId(),
       balance: (await walletConnection.account().state()).amount
@@ -55,12 +55,17 @@ async function initConnection() {
 
 
   const lockBox = openLockBox(walletConnection);
-  const store = openStore(walletConnection);
-  return { contract, currentUser, nearConfig, walletConnection, lockBox, store }
+  const brokers = await lockBox.listBrokers()
+  if (brokers.length == 0) {
+    throw Error("no storage brokers available")
+  }
+  const broker = brokers[0]
+  const storage = openStore(walletConnection, { brokerInfo: broker });
+  return { contract, currentUser, nearConfig, walletConnection, lockBox, storage, broker }
 }
 
 window.nearInitPromise = initConnection()
-  .then(({ contract, currentUser, nearConfig, walletConnection, lockBox, store }) => {
+  .then(({ contract, currentUser, nearConfig, walletConnection, lockBox, storage, broker }) => {
     ReactDOM.render(
       <App
         contract={contract}
@@ -68,7 +73,8 @@ window.nearInitPromise = initConnection()
         nearConfig={nearConfig}
         wallet={walletConnection}
         lockBox={lockBox}
-        store={store}
+        storage={storage}
+        broker={broker}
       />,
       document.getElementById('root')
     );

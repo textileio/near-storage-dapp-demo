@@ -10,9 +10,9 @@ const ASSET_LIMIT = 10;
  * NOTE: This is a change method. Which means it will modify the state.\
  * But right now we don't distinguish them with annotations yet.
  */
-export function storeNewAsset(cid: string, rule: string): void {
+export function storeNewAsset(id: string, cid: string, rule: string): void {
   // Creating a new message and populating fields with our data
-  const message = new TokenAsset(cid, rule);
+  const message = new TokenAsset(id, cid, rule);
   // Adding the message to end of the the persistent collection
   assets.push(message);
 }
