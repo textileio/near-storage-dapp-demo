@@ -5,7 +5,7 @@ import { Artwork } from './components/Artwork';
 import Rule from './components/Rule';
 import Tokens from './components/Tokens';
 import { ScreenClassProvider, Container, Row, Col, setConfiguration } from 'react-grid-system';
-import { LockBox, Storage, BrokerInfo, RequestStatus } from "@textile/near-storage"
+import { API, RequestStatus } from "@textile/near-storage"
 
 setConfiguration({ defaultScreenClass: 'sm', gridColumns: 16 });
 
@@ -19,16 +19,14 @@ const randomRuleNumber = () => {
   return highlights[Math.floor(Math.random() * highlights.length)]
 }
 interface Props {
-  storage: Storage
-  broker: BrokerInfo
-  lockBox: LockBox
+  storage: API
   contract?: any
   currentUser?: any
   nearConfig?: any
   wallet?: any
 };
 
-const App = ({ contract, currentUser, nearConfig, wallet, lockBox, storage, broker, ...rest }: Props) => {
+const App = ({ contract, currentUser, nearConfig, wallet, storage, ...rest }: Props) => {
   const h = window.location.hash == "" ? randomRuleNumber() : Number(window.location.hash.replace("#", ""))
   const ruleToAutomata = (rule: number) => {
     return rule.toString(2).split("").reverse().concat(Array(8).fill("0")).slice(0, 8).map((s) => parseInt(s));
@@ -37,7 +35,7 @@ const App = ({ contract, currentUser, nearConfig, wallet, lockBox, storage, brok
   const [tokens, setTokens] = useState<Array<{ cid: string, rule: string, status: string }>>([]);
   const [artwork, setArtwork] = useState<string>();
   const [positionals, setPositionals] = useState(automata);
-  const [locked, setLocked] = useState<boolean>(false);
+  const [hasDeposit, setHasDeposit] = useState<boolean>(false);
 
   const [width, setWidth] = useState(0);
   const div = useCallback(node => {
@@ -81,7 +79,7 @@ const App = ({ contract, currentUser, nearConfig, wallet, lockBox, storage, brok
       setTokens(combined)
     })
 
-    lockBox.hasLocked(broker.brokerId).then(setLocked);
+    storage.hasDeposit().then(setHasDeposit)
   }, []);
 
   const ruleN = parseInt([...positionals].reverse().join(""), 2)
@@ -128,16 +126,16 @@ const App = ({ contract, currentUser, nearConfig, wallet, lockBox, storage, brok
     setArtwork(b)
   }
 
-  const lock = async () => {
-    await lockBox.lockFunds(broker.brokerId)
+  const addDeposit = async () => {
+    await storage.addDeposit()
   }
 
   const signIn = () => {
-    lockBox.requestSignIn('RULE TOKENS');
+    storage.requestSignIn('RULE TOKENS')
   };
 
   const signOut = async () => {
-    lockBox.signOut();
+    storage.signOut()
     window.location.reload()
   };
 
@@ -153,8 +151,8 @@ const App = ({ contract, currentUser, nearConfig, wallet, lockBox, storage, brok
     if (!currentUser) {
       return <div className={`currentRule`}>{`Rule ${ruleN} — `}<span className="link" onClick={signIn}>Log in</span>{` to get started.`}</div>
     }
-    if (!locked) {
-      return <div className={`currentRule active`}>{`Rule ${ruleN} — `}<span className="link" onClick={lock}>Lock funds</span>{` to start a storage session.`}</div>
+    if (!hasDeposit) {
+      return <div className={`currentRule active`}>{`Rule ${ruleN} — `}<span className="link" onClick={addDeposit}>Deposit funds</span>{` to start a storage session.`}</div>
     }
     let frag = artwork ? <><span className="link" onClick={mint}>Click here</span> to mint again.</> : <>Waiting to render...</>
     if (!owned) {
@@ -171,7 +169,7 @@ const App = ({ contract, currentUser, nearConfig, wallet, lockBox, storage, brok
             : <div className="headerItem link" onClick={signIn}>Log in</div>
           }
           {currentUser &&
-            <div className="headerItem headerItemLast">Storage session: {locked ? "Active" : "Inactive"}</div>
+            <div className="headerItem headerItemLast">Storage session: {hasDeposit ? "Active" : "Inactive"}</div>
           }
           <br />
           <h2>RULE TOKENS</h2>
@@ -222,7 +220,7 @@ const App = ({ contract, currentUser, nearConfig, wallet, lockBox, storage, brok
           <Col>
             <h2>About</h2>
             <div>
-              Sign in with NEAR and mint your cellular atomata! This contract will store a map to all your assets stored on Filecoin/IPFS. Lock funds to upload new assets through the Filecoin Oracle, and you funds will be returned to you after your storage session expires in a hour or so. This contract and app were built with an AssemblyScript backend and a React frontend.
+              Sign in with NEAR and mint your cellular atomata! This contract will store a map to all your assets stored on Filecoin/IPFS. Deposit funds to upload new assets through the Filecoin Oracle, and you funds will be returned to you after your storage session expires in a hour or so. This contract and app were built with an AssemblyScript backend and a React frontend.
           </div>
           </Col>
         </Row>

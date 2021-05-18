@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 // @ts-expect-error missing types
 import getConfig from './config.js';
 import { connect, keyStores, Contract, WalletConnection } from 'near-api-js';
-import { openLockBox, openStore } from "@textile/near-storage"
+import { init } from "@textile/near-storage"
 
 // Seems like a strange hack
 const ENV = process.env as unknown as Record<string, string>
@@ -19,6 +19,7 @@ declare global {
 
 // Initializing contract
 async function initConnection() {
+  // Read the configuration
   const nearConfig = getConfig(ENV.NODE_ENV as any || 'testnet');
 
   // Initializing connection to the NEAR TestNet
@@ -30,7 +31,7 @@ async function initConnection() {
   });
 
   // Needed to access wallet
-  const walletConnection = new WalletConnection(near, null);
+  const walletConnection = new WalletConnection(near, null)
 
   // Load in account data
   let currentUser;
@@ -53,28 +54,19 @@ async function initConnection() {
     sender: walletConnection.getAccountId()
   });
 
-
-  const lockBox = openLockBox(walletConnection);
-  const brokers = await lockBox.listBrokers()
-  if (brokers.length == 0) {
-    throw Error("no storage brokers available")
-  }
-  const broker = brokers[0]
-  const storage = openStore(walletConnection, { brokerInfo: broker });
-  return { contract, currentUser, nearConfig, walletConnection, lockBox, storage, broker }
+  const storage = await init(walletConnection)
+  return { contract, currentUser, nearConfig, walletConnection, storage }
 }
 
 window.nearInitPromise = initConnection()
-  .then(({ contract, currentUser, nearConfig, walletConnection, lockBox, storage, broker }) => {
+  .then(({ contract, currentUser, nearConfig, walletConnection, storage }) => {
     ReactDOM.render(
       <App
         contract={contract}
         currentUser={currentUser}
         nearConfig={nearConfig}
         wallet={walletConnection}
-        lockBox={lockBox}
         storage={storage}
-        broker={broker}
       />,
       document.getElementById('root')
     );
