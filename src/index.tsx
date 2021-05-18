@@ -6,19 +6,20 @@ import ReactDOM from 'react-dom';
 // @ts-expect-error missing types
 import getConfig from './config.js';
 import { connect, keyStores, Contract, WalletConnection } from 'near-api-js';
-import { openLockBox, openStore } from "@textile/near-storage"
+import { init } from "@textile/near-storage"
 
 // Seems like a strange hack
 const ENV = process.env as unknown as Record<string, string>
 
 declare global {
-    interface Window { 
-      nearInitPromise: Promise<void>
-     }
+  interface Window {
+    nearInitPromise: Promise<void>
+  }
 }
 
 // Initializing contract
 async function initConnection() {
+  // Read the configuration
   const nearConfig = getConfig(ENV.NODE_ENV as any || 'testnet');
 
   // Initializing connection to the NEAR TestNet
@@ -30,11 +31,11 @@ async function initConnection() {
   });
 
   // Needed to access wallet
-  const walletConnection = new WalletConnection(near, null);
+  const walletConnection = new WalletConnection(near, null)
 
   // Load in account data
   let currentUser;
-  if(walletConnection.getAccountId()) {
+  if (walletConnection.getAccountId()) {
     currentUser = {
       accountId: walletConnection.getAccountId(),
       balance: (await walletConnection.account().state()).amount
@@ -53,22 +54,19 @@ async function initConnection() {
     sender: walletConnection.getAccountId()
   });
 
-
-  const lockBox = openLockBox(walletConnection);
-  const store = openStore(walletConnection);
-  return { contract, currentUser, nearConfig, walletConnection, lockBox, store }
+  const storage = await init(walletConnection)
+  return { contract, currentUser, nearConfig, walletConnection, storage }
 }
 
 window.nearInitPromise = initConnection()
-  .then(({ contract, currentUser, nearConfig, walletConnection, lockBox, store }) => {
+  .then(({ contract, currentUser, nearConfig, walletConnection, storage }) => {
     ReactDOM.render(
       <App
         contract={contract}
         currentUser={currentUser}
         nearConfig={nearConfig}
         wallet={walletConnection}
-        lockBox={lockBox}
-        store={store}
+        storage={storage}
       />,
       document.getElementById('root')
     );
