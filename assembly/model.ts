@@ -16,4 +16,4 @@ export class TokenAsset {
  * The parameter to the constructor needs to be unique across a single contract.
  * It will be used as a prefix to all keys required to store data in the storage.
  */
-export const assets = new PersistentVector<TokenAsset>("a");
+export const assets = new PersistentVector<TokenAsset>("b");
