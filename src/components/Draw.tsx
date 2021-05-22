@@ -7,12 +7,12 @@ const Draw = (draw: any, width: number, onComplete: (img: string) => void) => {
   const applyStyle = (canvas: HTMLCanvasElement) => {
     var size = Math.floor(width);
     canvas.style.width = size + "px";
-    canvas.style.height = 2*size/3 + "px";
+    canvas.style.height = size/2 + "px";
 
     // Set actual size in memory (scaled to account for extra pixel density).
     var scale = window.devicePixelRatio; // Change to 1 on retina screens to see blurry canvas.
     canvas.width = Math.floor(size * scale);
-    canvas.height = Math.floor(size * scale);
+    canvas.height = Math.floor((size/2) * scale);
 
 		canvas.style.top = "0px";
 		canvas.style.left = "0px";
