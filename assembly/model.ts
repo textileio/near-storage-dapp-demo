@@ -6,7 +6,7 @@ import { context, u128, PersistentVector } from "near-sdk-as";
 @nearBindgen
 export class TokenAsset {
   sender: string;
-  constructor(public cid: string, public rule: string) {
+  constructor(public id: string, public cid: string, public rule: string) {
     this.sender = context.sender;
   }
 }
@@ -16,4 +16,4 @@ export class TokenAsset {
  * The parameter to the constructor needs to be unique across a single contract.
  * It will be used as a prefix to all keys required to store data in the storage.
  */
-export const assets = new PersistentVector<TokenAsset>("m");
+export const assets = new PersistentVector<TokenAsset>("b");

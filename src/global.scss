@@ -85,11 +85,19 @@ input[type="number"] {
   }
 }
 
-.auth {
+.link {
   cursor: pointer;
-  font-size: var(--small-font);
   text-decoration: underline;
+}
+
+.headerItem {
+  float: left;
+  font-size: var(--small-font);
   margin: 20px 0 0;
+}
+
+.headerItemLast {
+  float: right;
 }
 
 .is-premium {
@@ -183,7 +191,6 @@ a.helpText {
   float:left;
   margin:5px;
   width: 120px;
-  height: 120px;
   cursor: pointer;
 }
 .token-image img{
@@ -211,7 +218,7 @@ a.helpText {
   top:0;
   left:0;
 }
-.token-image .asset-link {
+.token-image .asset-text {
   align-self: center;
   position: relative;
   width: 120px;
@@ -222,10 +229,15 @@ a.helpText {
   font-size: var(--small-font);
   line-height: 24px;
 }
-.token-image .asset-link a {
+.token-image .asset-text a {
   text-decoration: none;
   color: #333;
 }
-.token-image .asset-link a:hover {
+.token-image .label {
+  margin: 0 0 0px;
+  font-size: var(--very-small-font);
+}
+
+.token-image .asset-text a:hover {
   text-decoration: underline;
 }
