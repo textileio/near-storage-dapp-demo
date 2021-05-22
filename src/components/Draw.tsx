@@ -5,15 +5,14 @@ const Draw = (draw: any, width: number, onComplete: (img: string) => void) => {
   const canvasRef = useRef(null)
   
   const applyStyle = (canvas: HTMLCanvasElement) => {
-    var size = Math.floor(width) * 2;
+    var size = Math.floor(width);
+    canvas.style.width = size + "px";
+    canvas.style.height = size/2 + "px";
+
     // Set actual size in memory (scaled to account for extra pixel density).
-    canvas.width = size; //Math.floor(size * scale);
-    canvas.height = size / 2; // Math.floor(size * scale);
-
     var scale = window.devicePixelRatio; // Change to 1 on retina screens to see blurry canvas.
-    canvas.style.width = Math.floor(size / scale) + "px";
-    canvas.style.height = Math.floor(size / scale / 2) + "px";
-
+    canvas.width = Math.floor(size * scale);
+    canvas.height = Math.floor((size/2) * scale);
 
 		canvas.style.top = "0px";
 		canvas.style.left = "0px";
