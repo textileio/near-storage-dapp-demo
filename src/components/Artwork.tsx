@@ -10,7 +10,6 @@ interface Props {
 export const Artwork = React.memo((props: Props) => {
   let cells: Array<number> = []
   const automata = props.automata;
-  
   const run = (c1: number, c2: number, c3: number) => automata[Number.parseInt("" + c1 + c2 + c3, 2)];
 
   const getWidth = (ctx: CanvasRenderingContext2D, cellSize: number) => {
