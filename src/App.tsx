@@ -68,6 +68,8 @@ const App = ({ contract, currentUser, nearConfig, wallet, storage, ...rest }: Pr
             default:
               return "Unknown"
           }
+        }).catch(() => {
+          return "Error checking status"
         })
       })
       return Promise.all(statusCalls)
