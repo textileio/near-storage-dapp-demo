@@ -1,3 +1,4 @@
+import { context } from "near-sdk-as";
 import { TokenAsset, assets } from './model';
 
 // --- contract code goes below
@@ -29,4 +30,18 @@ export function getStoredAssets(): TokenAsset[] {
     result[i] = assets[i + startIndex];
   }
   return result;
+}
+
+export function resetState(): i32 {
+  if (context.sender != context.contractName) {
+    throw new Error("invalid sender account id")
+  }
+  let empty = assets.isEmpty
+  let numDeleted = 0
+  while (!empty) {
+    assets.pop()
+    numDeleted++
+    empty = assets.isEmpty
+  }
+  return numDeleted
 }
