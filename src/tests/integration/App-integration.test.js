@@ -19,19 +19,20 @@ beforeAll(async function() {
 });
 
 it('send one message and retrieve it', async() => {
-  await contract.storeNewAsset({ text: 'aloha' });
+  await contract.storeNewAsset({ id: 'id1', cid: 'cid1', rule: 'aloha1' });
   const msgs = await contract.getStoredAssets();
   const expectedMessagesResult = [{
-    premium: false,
     sender: accountId,
-    text: 'aloha'
+    id: 'id1',
+    cid: 'cid1',
+    rule: 'aloha1'
   }];
   expect(msgs).toEqual(expectedMessagesResult);
 });
 
 it('send two more messages and expect three total', async() => {
-  await contract.storeNewAsset({ text: 'foo' });
-  await contract.storeNewAsset({ text: 'bar' });
+  await contract.storeNewAsset({ id: 'id2', cid: 'cid2', rule: 'aloha2' });
+  await contract.storeNewAsset({ id: 'id3', cid: 'cid3', rule: 'aloha3' });
   const msgs = await contract.getStoredAssets();
   expect(msgs.length).toEqual(3);
 });
