@@ -173,9 +173,10 @@ the NEAR blockchain.
 
 ### Checking Filecoin Storage Status
 
-You stored data is always available on the IPFS network, but stored data takes time 
-to make it through the Filecoin Storage Provider, become sealed in a Filecoin miner, 
-and verified on the Filecoin blockchain. You can check the data's status at any time
+You stored data is available on the IPFS network (note that during the Testnet release,
+data will pinned for a limited time only), but stored data takes time to make it
+through the Filecoin Storage Provider, become sealed with a Filecoin miner, and
+verified on the Filecoin blockchain. You can check the data's status at any time
 by calling the Filecoin Storage `status` method. In `App.tsx` we do that when the page
 loads by getting a list of stored data IDs from our dApp's smart contract and passing
 those IDs to the `status` method. It's a bit of Javascript async `Promise` wrangling,
