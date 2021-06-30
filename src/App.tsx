@@ -110,7 +110,7 @@ const App = ({ contract, currentUser, nearConfig, wallet, storage, ...rest }: Pr
       type: "image/png",
       lastModified: new Date().getTime(),
     });
-    const { request } = await storage.store(file)
+    const request = await storage.store(file)
     const rule = "" + parseInt([...positionals].reverse().join(""), 2)
     contract.storeNewAsset(
       { id: request.id, cid: request.cid["/"], rule },
