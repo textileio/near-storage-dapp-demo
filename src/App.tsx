@@ -5,7 +5,7 @@ import { Artwork } from './components/Artwork';
 import Rule from './components/Rule';
 import Tokens from './components/Tokens';
 import { ScreenClassProvider, Container, Row, Col, setConfiguration } from 'react-grid-system';
-import { API, RequestStatus } from "@textile/near-storage"
+import { API, Status } from "@textile/near-storage"
 
 setConfiguration({ defaultScreenClass: 'sm', gridColumns: 16 });
 
@@ -51,19 +51,19 @@ const App = ({ contract, currentUser, nearConfig, wallet, storage, ...rest }: Pr
         if (!asset.id || asset.id.length === 0) {
           return "Unknown"
         }
-        return storage.status(asset.id).then((status) => {
-          switch (status.status_code) {
-            case RequestStatus.Auctioning:
+        return storage.status(asset.id).then(({ request }) => {
+          switch (request.status_code) {
+            case Status.Auctioning:
               return "Auctioning"
-            case RequestStatus.Batching:
+            case Status.Batching:
               return "Batching"
-            case RequestStatus.DealMaking:
+            case Status.DealMaking:
               return "Making deal"
-            case RequestStatus.Preparing:
+            case Status.Preparing:
               return "Preparing"
-            case RequestStatus.Success:
+            case Status.Success:
               return "Success"
-            case RequestStatus.Unknown:
+            case Status.Unknown:
               "Unknown"
             default:
               return "Unknown"
@@ -110,10 +110,10 @@ const App = ({ contract, currentUser, nearConfig, wallet, storage, ...rest }: Pr
       type: "image/png",
       lastModified: new Date().getTime(),
     });
-    const stored = await storage.store(file)
+    const { request } = await storage.store(file)
     const rule = "" + parseInt([...positionals].reverse().join(""), 2)
     contract.storeNewAsset(
-      { id: stored.id, cid: stored.cid["/"], rule },
+      { id: request.id, cid: request.cid["/"], rule },
       BOATLOAD_OF_GAS,
       Big('0').toFixed()
     ).then(() => {
@@ -133,7 +133,7 @@ const App = ({ contract, currentUser, nearConfig, wallet, storage, ...rest }: Pr
   }
 
   const signIn = () => {
-    storage.requestSignIn('RULE TOKENS')
+    storage.requestSignIn()
   };
 
   const signOut = async () => {
