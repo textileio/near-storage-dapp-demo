@@ -33,17 +33,19 @@ async function initConnection() {
   // Needed to access wallet
   const walletConnection = new WalletConnection(near, null)
 
+  const account = walletConnection.account()
+
   // Load in account data
   let currentUser;
   if (walletConnection.getAccountId()) {
     currentUser = {
       accountId: walletConnection.getAccountId(),
-      balance: (await walletConnection.account().state()).amount
+      balance: (await account.state()).amount
     };
   }
 
   // Initializing our contract APIs by contract name and configuration
-  const contract = await new Contract(walletConnection.account(), nearConfig.contractName, {
+  const contract = new Contract(walletConnection.account(), nearConfig.contractName, {
     // View methods are read-only – they don't modify the state, but usually return some value
     viewMethods: ['getStoredAssets'],
     // Change methods can modify the state, but you don't receive the returned value when called
@@ -54,7 +56,7 @@ async function initConnection() {
     sender: walletConnection.getAccountId()
   });
 
-  const storage = await init(walletConnection, { contractName: 'filecoin-bridge-edge' })
+  const storage = await init(account, { contractId: 'filecoin-bridge-edge.testnet' })
   return { contract, currentUser, nearConfig, walletConnection, storage }
 }
 
@@ -65,7 +67,7 @@ window.nearInitPromise = initConnection()
         contract={contract}
         currentUser={currentUser}
         nearConfig={nearConfig}
-        wallet={walletConnection}
+        walletConnection={walletConnection}
         storage={storage}
       />,
       document.getElementById('root')
