@@ -5,11 +5,10 @@ import { Artwork } from './components/Artwork';
 import Rule from './components/Rule';
 import Tokens from './components/Tokens';
 import { ScreenClassProvider, Container, Row, Col, setConfiguration } from 'react-grid-system';
-import { API, Status } from "@textile/near-storage"
+import { API, Status, requestSignIn } from "@textile/near-storage"
 
 setConfiguration({ defaultScreenClass: 'sm', gridColumns: 16 });
 
-const SUGGESTED_DONATION = '0';
 const BOATLOAD_OF_GAS = Big(3).times(10 ** 13).toFixed();
 
 const ruleset = ["111", "110", "101", "100", "011", "010", "001", "000"]
@@ -23,10 +22,10 @@ interface Props {
   contract?: any
   currentUser?: any
   nearConfig?: any
-  wallet?: any
+  walletConnection?: any
 };
 
-const App = ({ contract, currentUser, nearConfig, wallet, storage, ...rest }: Props) => {
+const App = ({ contract, currentUser, nearConfig, walletConnection, storage, ...rest }: Props) => {
   const h = window.location.hash == "" ? randomRuleNumber() : Number(window.location.hash.replace("#", ""))
   const ruleToAutomata = (rule: number) => {
     return rule.toString(2).split("").reverse().concat(Array(8).fill("0")).slice(0, 8).map((s) => parseInt(s));
@@ -68,7 +67,8 @@ const App = ({ contract, currentUser, nearConfig, wallet, storage, ...rest }: Pr
             default:
               return "Unknown"
           }
-        }).catch(() => {
+        }).catch((err) => {
+          console.log(err)
           return "Error checking status"
         })
       })
@@ -133,11 +133,11 @@ const App = ({ contract, currentUser, nearConfig, wallet, storage, ...rest }: Pr
   }
 
   const signIn = () => {
-    storage.requestSignIn()
+    requestSignIn(walletConnection, {})
   };
 
   const signOut = async () => {
-    storage.signOut()
+    walletConnection.signOut()
     window.location.reload()
   };
 
