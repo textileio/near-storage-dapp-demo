@@ -56,7 +56,7 @@ async function initConnection() {
     sender: walletConnection.getAccountId()
   });
 
-  const storage = await init(account, { contractId: 'filecoin-bridge-edge.testnet' })
+  const storage = await init(account, { contractId: 'filecoin-bridge.testnet' })
   return { contract, currentUser, nearConfig, walletConnection, storage }
 }
 
